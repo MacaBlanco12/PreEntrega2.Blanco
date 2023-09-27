@@ -1,93 +1,82 @@
-
-/*co: condicional si o no para ejecturar el bucle
-z:zona que ingresa el cliente
-zonas: devuelve un string con las zonas elegidas por el cliente */
-/*
-let co= ("");
-let z= "";
-let zonas=[];
-let comienzo =  confirm ("Queres armar tu sesion?")
-if (comienzo === true){
-    do {
-        z = prompt("Por favor, elegi las zonas que quieras realizarte: axilas, piernas, rostro, brazos");
-        co = prompt ("Queres elegir otra zona?");
-        zonas.push(z) ;
-    }while (co === "si");
-    alert("Elegiste las zonas" + " " + zonas)
+const Zona = function (nombre, precio, duracion) {
+        this.nombre = nombre,
+        this.precio = precio,
+        this.duracion = duracion
 }
+let zona1 = new Zona("cavado", 3000, 5)
+let zona2 = new Zona("axilas", 2800, 2)
+let zona3 = new Zona("piernas", 6000, 13)
+let zona4 = new Zona("rostro", 5000, 10)
+let zona5 = new Zona("brazos", 4000, 8)
 
+let listaZona = [zona1, zona2, zona3, zona4, zona5]
 
-/*funcion que devuelve el precio de cada zona 
-let zona = prompt("Ingresa la zona que quieras saber el precio");*/
-function precio(zona) {
-    let axilas = 2800;
-    let rostro = 5000;
-    let piernas = 6000;
-    let bozo = 3000;
-    let resultado = 0;
-    let z =zona;
-    switch (z) {
-        case "axilas":
-            resultado = (axilas)
-           
-            break;
-        case "rostro":
-            resultado = (rostro)
-           
-            break;
-        case "piernas":
-            resultado = (piernas)
-           
-            break;
-        case "bozo":
-            resultado = (bozo)
-           
-            break;
-        default:
-            alert("La zona ingresada no se encuentra registrada, por favor ingresa otra")
+function agregarZona() {
+    let nombre = prompt("Ingresa zombre de la zona: ").trim()
+    let precio = parseFloat(prompt("Ingresa el valor de la zona: "))
+    let duracion = parseInt(prompt("Ingresa la duracion en minutos de la zona: "))
+
+    if (isNaN(precio) || isNaN(duracion) || nombre === "") {
+        alert("No ingresaste ningun dato.")
+        return;
     }
-    return resultado;
-}
-/* devuelve el precio de cada zona utilizando la funcion
-let confirmacion="si";
-while (confirmacion === "si") {
-    let zona = prompt("Ingresa la zona que quieras saber el precio");
-    switch (zona) {
-        case "axilas":
-            precio(zona);
-            break;
-        case "rostro":
-            precio(zona);
-            break;
-        case "piernas":
-            precio(zona);
-            break;
-        default:
-            alert("Ups, hubo un error! Ingresa otra zona")
+    let zona = new Zona(nombre, precio, duracion)
+    if (listaZona.some((z) => z.nombre === zona.nombre)) {
+        alert("La zona ya existe, ingresa otra.")
+        return;
     }
-    confirmacion=prompt("¿Queres saber otro precio? si / no")
-}
-alert("Gracias, vuelva prontos!!")*/
 
-
-/*CALCULA EL VALOR DE LAS ZONAS ELEGIDAS Y LE APLICA EL DESCUENTO EN CASO DE TENER UN CUPON ) */
-
-let co= ("");
-let z= "";
-let zonas=0;
-let comienzo =  confirm ("Queres armar tu sesion?")
-if (comienzo === true){
-    do {
-        z = prompt("Por favor, elegi las zonas que quieras realizarte: axilas, piernas, rostro, brazos");
-        precio(z)
-        co = prompt ("Queres elegir otra zona?");
-        zonas = zonas+ (precio(z));
-    }while (co === "si");
-    alert("Precio total:" + " " + zonas)
-let desc=prompt("Tenes un codigo de descuento? Ingresalo")
-let d = 1.02;
-if (desc==="DESCUENTO"){
-    alert("Tu valor con el descuento aplicado es de:" + " " + (zonas*d))
+    listaZona.push(zona)
+    console.table(listaZona)
 }
-    
+
+let promociones = [];
+function armaPromocion() {
+    let precioTotal = 0;
+    let zonasElegidas = [];
+    const descuento = 0.9;
+
+    while (true) {
+        let nombreZona = prompt("Ingresa una zona a agregar o escribi 'fin' para terminar. Zonas disponibles: cavado, axilas, piernas, rostro,brazos");
+
+        if (nombreZona.toLowerCase() === 'fin') {
+            break;
+        }
+
+        if (nombreZona === "") {
+            alert("No se registro ningun dato. Proba Otra vez. Zonas disponibles: cavado, axilas, piernas, rostro,brazos")
+            return;
+        }
+        if (zonasElegidas.includes(nombreZona.toLowerCase())) {
+            alert("Ya agregaste esa zona, por favor, elegi otra. Zonas disponibles: cavado, axilas, piernas, rostro,brazos")
+            continue;
+        }
+        let zonaEncontrada = null;
+
+        for (let i = 0; i < listaZona.length; i++) {
+
+            if (listaZona[i].nombre.toLowerCase() === nombreZona.toLowerCase()) {
+
+                zonaEncontrada = listaZona[i];
+            }
+        }
+        if (zonaEncontrada) {
+            precioTotal += zonaEncontrada.precio;
+            precioTotal *= descuento;
+            zonasElegidas += zonaEncontrada.nombre + '+';
+        } else {
+            alert("Zona no encontrada. Zonas disponibles: cavado, axilas, piernas, rostro,brazos ");
+        }
+    }
+    const promocionActual = {
+        zonas: zonasElegidas,
+        precioTotal: precioTotal
+    };
+
+    promociones.push(promocionActual);
+
+    console.log("Elegiste la promocion que incluye:", promocionActual, "que tiene", Math.round((1.0 - (descuento)) * 100), "% de descuento");
 }
+
+console.table(listaZona)
+armaPromocion();
